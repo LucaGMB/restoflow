@@ -1,5 +1,10 @@
 # RestoFlow — Sistema Integral de Gestión de Reservas y Mesas
 
+> [!NOTE]
+> **Aplicación desplegada:** [https://restoflow.lucagmb.com.ar](https://restoflow.lucagmb.com.ar)
+>
+> **Aviso:** Este proyecto fue desarrollado exclusivamente como entrega para un curso obligatorio. A fines prácticos y como ejercicio de automatización, todo el contenido de este repositorio (código fuente, pruebas y textos explicativos) fue generado 100% mediante modelos de lenguaje (LLMs) y agentes de IA, limitando mi intervención únicamente a la orquestación de las herramientas. Por lo tanto, no refleja mi estilo personal de desarrollo ni representa un trabajo de autoría propia.
+
 ![Node.js](https://img.shields.io/badge/Node.js-22+-339933?logo=node.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)

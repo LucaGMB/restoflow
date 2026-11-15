@@ -1,0 +1,13 @@
+{
+  "name": "restoflow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistema de Gestión Integral de Reservas y Mesas para Gastronomía",
+  "scripts": {
+    "dev:backend": "pnpm --filter restoflow-backend dev",
+    "dev:frontend": "pnpm --filter restoflow-frontend dev",
+    "build": "pnpm --filter restoflow-backend build && pnpm --filter restoflow-frontend build",
+    "test": "pnpm --filter restoflow-backend test",
+    "seed": "pnpm --filter restoflow-backend db:seed"
+  }
+}

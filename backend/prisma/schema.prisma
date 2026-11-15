@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum EstadoMesa {
+  LIBRE
+  RESERVADA
+  OCUPADA
+  MANTENIMIENTO
+}
+
+enum EstadoReserva {
+  PENDIENTE
+  CONFIRMADA
+  EN_CURSO
+  COMPLETADA
+  CANCELADA
+  NO_SHOW
+}
+
+enum EstadoListaEspera {
+  EN_ESPERA
+  NOTIFICADO
+  CONVERTIDO
+  EXPIRADO
+}
+
+model Sector {
+  id          Int     @id @default(autoincrement())
+  nombre      String  @unique
+  descripcion String
+  activo      Boolean @default(true)
+  mesas       Mesa[]
+}
+
+model Mesa {
+  id           Int        @id @default(autoincrement())
+  numero       String     @unique
+  capacidadMin Int
+  capacidadMax Int
+  sectorId     Int
+  estadoActual EstadoMesa @default(LIBRE)
+  sector       Sector     @relation(fields: [sectorId], references: [id], onDelete: Restrict)
+  reservas     Reserva[]
+
+  @@index([sectorId])
+}
+
+model Turno {
+  id          Int           @id @default(autoincrement())
+  nombre      String        @unique
+  horaInicio  String
+  horaFin     String
+  diasActivos String
+  reservas    Reserva[]
+  listaEspera ListaEspera[]
+}
+
+model Cliente {
+  id              Int           @id @default(autoincrement())
+  nombre          String
+  email           String        @unique
+  telefono        String
+  contadorNoShows Int           @default(0)
+  ultimoNoShowAt  DateTime?
+  bloqueadoHasta  DateTime?
+  reservas        Reserva[]
+  listaEspera     ListaEspera[]
+}
+
+model Reserva {
+  id               Int           @id @default(autoincrement())
+  codigo           String        @unique
+  fecha            DateTime
+  turnoId          Int
+  mesaId           Int
+  clienteId        Int
+  cantidadPersonas Int
+  notas            String?
+  estado           EstadoReserva @default(CONFIRMADA)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  turno   Turno   @relation(fields: [turnoId], references: [id], onDelete: Restrict)
+  mesa    Mesa    @relation(fields: [mesaId], references: [id], onDelete: Restrict)
+  cliente Cliente @relation(fields: [clienteId], references: [id], onDelete: Restrict)
+
+  @@index([fecha, turnoId])
+  @@index([mesaId, fecha, turnoId])
+  @@index([clienteId, estado])
+}
+
+model ListaEspera {
+  id               Int               @id @default(autoincrement())
+  fecha            DateTime
+  turnoId          Int
+  clienteId        Int
+  cantidadPersonas Int
+  prioridad        Int
+  estado           EstadoListaEspera @default(EN_ESPERA)
+  createdAt        DateTime          @default(now())
+
+  turno   Turno   @relation(fields: [turnoId], references: [id], onDelete: Restrict)
+  cliente Cliente @relation(fields: [clienteId], references: [id], onDelete: Restrict)
+
+  @@index([fecha, turnoId, estado, prioridad])
+}

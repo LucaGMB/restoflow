@@ -1,0 +1,56 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: "3001"
+      DATABASE_URL: "file:/app/data/restoflow.db"
+      CORS_ORIGIN: "${CORS_ORIGIN:-*}"
+    volumes:
+      - restoflow_data:/app/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3001/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_API_URL: /api
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - internal
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=dokploy-network"
+      - "traefik.http.routers.restoflow-web.rule=Host(`${APP_DOMAIN:-localhost}`)"
+      - "traefik.http.routers.restoflow-web.entrypoints=web"
+      - "traefik.http.routers.restoflow-web.service=restoflow"
+      - "traefik.http.routers.restoflow-websecure.rule=Host(`${APP_DOMAIN:-localhost}`)"
+      - "traefik.http.routers.restoflow-websecure.entrypoints=websecure"
+      - "traefik.http.routers.restoflow-websecure.tls=true"
+      - "traefik.http.routers.restoflow-websecure.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.restoflow-websecure.service=restoflow"
+      - "traefik.http.services.restoflow.loadbalancer.server.port=80"
+
+volumes:
+  restoflow_data:
+
+networks:
+  internal:
+    driver: bridge
+  dokploy-network:
+    external: true

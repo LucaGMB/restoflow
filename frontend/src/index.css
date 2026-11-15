@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+}
+
+/* High-contrast focus ring per accessibility guidelines */
+:where(a:any-link, button, input, select, textarea):focus-visible {
+  outline: 3px solid #c2410c;
+  outline-offset: 2px;
+}
+
+/* Skip link utility */
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* Native <dialog> backdrop & centering */
+dialog.rf-dialog::backdrop {
+  background-color: rgb(28 25 23 / 0.55);
+  backdrop-filter: blur(2px);
+}
+
+dialog.rf-dialog {
+  margin: auto;
+  max-inline-size: min(32rem, calc(100vw - 2rem));
+  inline-size: 100%;
+}
+
+/* Responsive container-queried data table per modern-web-guidance */
+.table-wrapper {
+  overflow: auto;
+  max-inline-size: 100%;
+  max-block-size: min(560px, 75vh);
+  container-type: inline-size;
+}
+
+.rf-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  inline-size: 100%;
+  --col-1: "Código";
+  --col-2: "Comensal";
+  --col-3: "Mesa / Sector";
+  --col-4: "Personas";
+  --col-5: "Estado";
+  --col-6: "Acciones";
+}
+
+.rf-table thead {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 2;
+}
+
+.rf-table tbody th {
+  position: sticky;
+  inset-inline-start: 0;
+  background-color: #ffffff;
+  z-index: 1;
+}
+
+@container (width < 600px) {
+  .rf-table,
+  .rf-table thead,
+  .rf-table tbody,
+  .rf-table tr,
+  .rf-table th,
+  .rf-table td {
+    display: block;
+  }
+
+  .rf-table thead {
+    display: none;
+  }
+
+  .rf-table tbody tr {
+    margin-block-end: 1rem;
+    border: 1px solid #e7e5e4;
+    border-radius: 0.75rem;
+    background-color: #ffffff;
+    overflow: hidden;
+  }
+
+  .rf-table tbody th {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 2;
+    background-color: #f5f5f4;
+    border-block-end: 1px solid #e7e5e4;
+    padding: 0.75rem 1rem;
+  }
+
+  .rf-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 1rem;
+    border-block-end: 1px solid #f5f5f4;
+  }
+
+  .rf-table tbody td:last-child {
+    border-block-end: 0;
+  }
+
+  .rf-table tbody td:nth-child(2)::before {
+    content: var(--col-2);
+    font-weight: 600;
+    color: #57534e;
+    font-size: 0.8125rem;
+  }
+  .rf-table tbody td:nth-child(3)::before {
+    content: var(--col-3);
+    font-weight: 600;
+    color: #57534e;
+    font-size: 0.8125rem;
+  }
+  .rf-table tbody td:nth-child(4)::before {
+    content: var(--col-4);
+    font-weight: 600;
+    color: #57534e;
+    font-size: 0.8125rem;
+  }
+  .rf-table tbody td:nth-child(5)::before {
+    content: var(--col-5);
+    font-weight: 600;
+    color: #57534e;
+    font-size: 0.8125rem;
+  }
+  .rf-table tbody td:nth-child(6)::before {
+    content: var(--col-6);
+    font-weight: 600;
+    color: #57534e;
+    font-size: 0.8125rem;
+  }
+}
